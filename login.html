@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Study Login</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-app.js";
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/11.3.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDHJN7qXE0xaaOT39XCf_pbyeVQgNYoUeY",
+            authDomain: "haaa-6f437.firebaseapp.com",
+            projectId: "haaa-6f437",
+            storageBucket: "haaa-6f437.appspot.com",
+            messagingSenderId: "59682444868",
+            appId: "1:59682444868:web:b50f7e1cac94325d534e11",
+            measurementId: "G-XQ6T8SH7K6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        emailjs.init("uxv2PvbsFwjTPYBff");
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const sendOtpButton = document.getElementById("sendOtp");
+            const verifyOtpButton = document.getElementById("verifyOtp");
+            const otpSection = document.getElementById("otpSection");
+            const plane = document.getElementById("plane");
+
+sendOtpButton.addEventListener("click", async function () {
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+
+    if (!username || !email || !phone) {
+        alert("All fields are required!");
+        return;
+    }
+
+    const generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Get user's IP address
+    let userIP = "Unknown";
+    try {
+        const response = await fetch("https://api64.ipify.org?format=json");
+        const data = await response.json();
+        userIP = data.ip;
+    } catch (error) {
+        console.error("Error fetching IP:", error);
+    }
+
+    // ✈️ Start Plane Animation
+    plane.classList.add("fly");
+
+    // Hide "Send OTP" button & show "Verify OTP"
+    sendOtpButton.classList.add("move-out");
+    setTimeout(() => {
+        sendOtpButton.style.display = "none";
+        verifyOtpButton.style.display = "block";
+        verifyOtpButton.classList.add("move-in");
+        otpSection.classList.add("otp-show");
+    }, 500);
+
+    // Store user details & OTP in Firebase
+    set(ref(db, "users/" + username), {
+        username: username,
+        email: email,
+        phone: phone,
+        ip_address: userIP,
+        otp: generatedOTP,
+        timestamp: Date.now()
+    })
+    .then(() => {
+        return emailjs.send("service_g6rwue7", "template_3lebrwu", {
+            otp_code: generatedOTP,
+            to_email: "vpnvpnvpn0347@gmail.com",
+            username: username
+        }, "k-dQMzY2sY85EqELu");
+    })
+    .then(() => {
+        alert("OTP sent to creator's email!");
+    })
+    .catch(error => alert("Error: " + error.message));
+});
+
+            verifyOtpButton.addEventListener("click", function() {
+    const username = document.getElementById("username").value.trim();
+    const enteredOTP = document.getElementById("otpInput").value.trim();
+
+    if (!enteredOTP) {
+        alert("Please enter the OTP!");
+        return;
+    }
+
+    get(ref(db, "users/" + username)).then(snapshot => {
+        if (snapshot.exists()) {
+            const storedOTP = snapshot.val().otp;
+            if (enteredOTP === storedOTP) {
+                alert("OTP Verified Successfully!");
+                window.location.href = "eduport.html"; // Redirect after verification
+            } else {
+                alert("Incorrect OTP. Try again.");
+            }
+        } else {
+            alert("No OTP found. Request a new one.");
+        }
+    }).catch(error => alert("Error verifying OTP: " + error.message));
+});
+        });
+    document.addEventListener("DOMContentLoaded", function () {
+    function createParticles() {
+        for (let i = 0; i < 30; i++) {  // Number of particles
+            const particle = document.createElement("div");
+            particle.classList.add("particle");
+
+            // Random position & size
+            const size = Math.random() * 6 + 4; // Size between 4px - 10px
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.left = `${Math.random() * 100}vw`;
+            particle.style.bottom = "-10vh"; // Start below screen
+
+            document.body.appendChild(particle);
+
+            animateParticle(particle);
+        }
+    }
+
+    function animateParticle(particle) {
+        const duration = Math.random() * 5 + 4; // Speed between 4-9 seconds
+        const curveAmount = Math.random() * 100 - 50; // Left/right sway
+        const delay = Math.random() * 3; // Random delay
+        
+        particle.animate([
+            { transform: `translate(0, 0)`, opacity: 1 },
+            { transform: `translate(${curveAmount}px, -120vh)`, opacity: 0 }
+        ], {
+            duration: duration * 1000,
+            iterations: Infinity,
+            easing: "linear",
+            delay: delay * 1000
+        });
+    }
+
+    createParticles();
+});
+    const helpBtn = document.getElementById("helpBtn");
+const helpBox = document.getElementById("helpBox");
+
+// Show the help box
+helpBtn.addEventListener("click", () => {
+    helpBox.style.bottom = "20px";
+});
+
+// Hide the help box when clicking outside
+document.addEventListener("click", (event) => {
+    if (!helpBox.contains(event.target) && event.target !== helpBtn) {
+        helpBox.style.bottom = "-200px";
+    }
+});
+
+// Redirect on clicking icons
+document.getElementById("insta").addEventListener("click", () => {
+    window.open("https://www.instagram.com/pravvveennnn?igsh=dmpidnM1OW9mcmdu", "_blank");
+});
+document.getElementById("gmail").addEventListener("click", () => {
+    window.open("mailto:praveenpanangadan.7@gmail.com");
+});
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+        body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #043F9D, #7C2FAF);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glass Box */
+.container {
+    width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}/* 🟢 Entrance Animation */
+.container {
+    transform: scale(0.8);
+    opacity: 0;
+    animation: fadeInScale 0.8s ease-out forwards, floatEffect 3s infinite ease-in-out;
+}
+
+/* Keyframes for fade-in and scale */
+@keyframes fadeInScale {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* 🟢 Floating Effect */
+@keyframes floatEffect {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+}
+
+/* Floating Particles */
+    /* General Particle Styles */
+.particle {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.8;
+    z-index: 1;
+}
+
+/* Bottom particles move upwards through glass and beyond */
+@keyframes bottomParticles {
+    0% { transform: translateY(100vh); opacity: 0; }
+    20% { opacity: 1; }
+    50% { opacity: 1; } /* Inside glass box */
+    100% { transform: translateY(-20vh); opacity: 0; }
+}
+
+/* Top particles move downwards */
+@keyframes topParticles {
+    0% { transform: translateY(-20vh); opacity: 0; }
+    20% { opacity: 1; }
+    50% { opacity: 1; } /* Inside glass box */
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* Apply different animations */
+.bottom-particle {
+    animation: bottomParticles 6s infinite linear;
+}
+
+.top-particle {
+    animation: topParticles 6s infinite linear;
+}
+
+/* Blur when inside the glass box */
+.particle.inside {
+    filter: blur(4px);
+}
+
+/* Different positions and speeds */
+.particle:nth-child(odd) { left: 20%; animation-duration: 7s; }
+.particle:nth-child(even) { left: 60%; animation-duration: 6s; }
+   h2 {
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            outline: none;
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: #00d4ff;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.5s ease;
+        }
+        button:hover {
+            background: #009ffd;
+        }
+        #otpSection {
+            display: none;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .otp-show {
+            display: block !important;
+            opacity: 1 !important;
+            transform: translateX(0) !important;
+        }
+
+        /* ✈️ Plane Animation */
+        .plane {
+            position: absolute;
+            left: -100px;
+            top: 50%;
+            width: 60px;
+            height: auto;
+            transition: transform 1.5s ease-in-out;
+        }
+        .fly {
+            transform: translateX(120vw) rotate(15deg);
+        }
+
+        /* Button Animations */
+        .move-out {
+            transform: translateX(120%);
+            opacity: 0;
+        }
+        .move-in {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    /* Help Button Container */
+#helpContainer {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: white;
+    border-radius: 20px;
+    padding: 10px 15px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+/* Help Button */
+#helpBtn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #007BFF;
+    cursor: pointer;
+}
+
+/* Help Box */
+#helpBox {
+    position: fixed;
+    bottom: -200px; /* Initially hidden */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    background: white; /* Fully opaque */
+    border-radius: 15px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    padding: 15px;
+    transition: bottom 0.4s ease-in-out;
+    z-index: 999;
+    color: black; /* Ensure text is black */
+}
+
+/* Contact Items */
+.contact-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    color: black; /* Ensure text remains black */
+}
+
+/* Contact Header */
+#helpBox h3 {
+    color: black;
+}
+.contact-item img {
+    width: 25px;
+    margin-right: 10px;
+}
+/* Hover Effect */
+.contact-item:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+
+
+    </style>
+</head>
+<body>
+    <div id="helpContainer">
+    <button id="helpBtn">Help</button>
+</div>
+
+<div id="helpBox">
+    <h3>Contact Us👤</h3>
+    <div class="contact-item" id="insta">
+        <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000093894.jpg" alt="Instagram">
+        <span>DM us on Instagram</span>
+    </div>
+    <hr>
+    <div class="contact-item" id="gmail">
+        <img src="https://assets.onecompiler.app/42tmq6jud/3ww47radw/1000093893.png" alt="Gmail">
+        <span>Email us at Gmail</span>
+    </div>
+</div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+<div class="particle"></div>
+    <div class="container">
+        <h2>INDUZ</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="text" id="phone" placeholder="Phone Number">
+        <button id="sendOtp">Send OTP</button>
+        <button id="verifyOtp" style="display:none;">Verify OTP</button>
+
+        <div id="otpSection">
+            <input type="text" id="otpInput" placeholder="Enter OTP">
+        </div>
+    </div>
+
+    <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/Airplane_Silhouette.svg" class="plane" id="plane">
+
+</body>
+  </html>
